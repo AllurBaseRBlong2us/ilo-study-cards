@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'ilo-study-v2';
+const CACHE_VERSION = 'ilo-study-v3';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
