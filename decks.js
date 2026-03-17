@@ -222,8 +222,8 @@ const DECKS = [
             color: "green",
             items: [
               { text: "Enables Reactor Trips from Turbine Trip:", sub: false },
-              { text: "Turbine Trip \u2014 Low Fluid Oil Pressure (2/3 < 534.2 psig)", sub: true },
-              { text: "Turbine Trip \u2014 Turbine Stop Valve Closure (4/4 closed)", sub: true },
+              { text: "EHC <590# (2/3)", sub: true },
+              { text: "Stop Valve Position > 1% from full open (< 99% open) (4/4)", sub: true },
               { text: "Below 50% (3/4 < 50%), turbine trip will not produce automatic reactor trip", sub: false }
             ]
           },
@@ -1538,7 +1538,7 @@ const DECKS = [
             label: "Coincidence",
             color: "red",
             items: [
-              { text: "1/2 on both buses (Bus A AND Bus B)", sub: false }
+              { text: "1/2 on PA01 & PA02", sub: false }
             ]
           },
           {
@@ -1582,7 +1582,7 @@ const DECKS = [
             label: "Coincidence",
             color: "red",
             items: [
-              { text: "1/2 on both buses", sub: false }
+              { text: "1/2 on PA01 & PA02", sub: false }
             ]
           },
           {
@@ -1590,7 +1590,8 @@ const DECKS = [
             color: "green",
             items: [
               { text: "Automatically blocked when power < P-7", sub: false },
-              { text: "Time delay relay prevents spurious trips from transient frequency perturbations", sub: true }
+              { text: "Time delay relay prevents spurious trips from transient frequency perturbations", sub: true },
+              { text: "Opens All 4 RCP breakers to ensure Flywheel Coastdown to prevent DNB", sub: false }
             ]
           },
           {
@@ -1619,7 +1620,7 @@ const DECKS = [
             label: "Setpoint",
             color: "amber",
             items: [
-              { text: "\u2264 58 psig", sub: false }
+              { text: "<590 psig EHC press", sub: false }
             ]
           },
           {
@@ -1662,7 +1663,7 @@ const DECKS = [
             label: "Setpoint",
             color: "amber",
             items: [
-              { text: "\u2264 1% open (fully closed)", sub: false }
+              { text: "<99% Open on Stop Valves", sub: false }
             ]
           },
           {
@@ -1705,7 +1706,10 @@ const DECKS = [
             label: "Setpoint",
             color: "amber",
             items: [
-              { text: "Any automatic or manual Safety Injection (SI) signal", sub: false }
+              { text: "Any automatic or manual Safety Injection (SI) signal", sub: false },
+              { text: "<1830 psig (2/3) PZR", sub: true },
+              { text: ">3.5 psig Containment", sub: true },
+              { text: "<615 psig Steam Line", sub: true }
             ]
           },
           {
