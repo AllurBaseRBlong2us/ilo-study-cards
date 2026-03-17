@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'ilo-study-v3';
+const CACHE_VERSION = 'ilo-study-v4';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -16,6 +16,9 @@ const PRECACHE_ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
+
+// Files that should always try network first (content that changes)
+const NETWORK_FIRST = ['decks.js', 'index.html'];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -40,12 +43,31 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(cached) {
+  var isNetworkFirst = NETWORK_FIRST.some(function(file) {
+    return event.request.url.endsWith(file);
+  });
+
+  if (isNetworkFirst) {
+    // Network first: try fresh content, fall back to cache for offline
+    event.respondWith(
+      fetch(event.request).then(function(response) {
+        var clone = response.clone();
+        caches.open(CACHE_VERSION).then(function(cache) {
+          cache.put(event.request, clone);
+        });
+        return response;
+      }).catch(function() {
+        return caches.match(event.request);
+      })
+    );
+  } else {
+    // Cache first: fonts, icons, etc. that rarely change
+    event.respondWith(
+      caches.match(event.request).then(function(cached) {
         return cached || fetch(event.request);
       })
-  );
+    );
+  }
 });
 
 self.addEventListener('message', function(event) {
