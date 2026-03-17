@@ -19,7 +19,7 @@ const DECKS = [
             label: "Coincidence",
             color: "red",
             items: [
-              { text: "Both RTBs are open", sub: false }
+              { text: "RTBs & Bypass Open (Train Specific)", sub: false }
             ]
           },
           {
@@ -130,7 +130,7 @@ const DECKS = [
               { text: "Underfrequency on RCPs", sub: true },
               { text: "Undervoltage on RCPs", sub: true },
               { text: "RCS Low Flow in 2 or more loops (2/3 < 89.9% flow)", sub: true },
-              { text: "Pressurizer Pressure \u2014 Low (\u2264 1930 psig)", sub: true },
+              { text: "Pressurizer Pressure \u2014 Low (\u2264 1940 psig)", sub: true },
               { text: "Below 10%, these trips are blocked", sub: false }
             ]
           },
@@ -318,10 +318,10 @@ const DECKS = [
             color: "green",
             items: [
               { text: "When < 1970 psig, allows manual block of:", sub: false },
-              { text: "Pressurizer Pressure \u2014 Low SI signal", sub: true },
-              { text: "Steam Line Pressure \u2014 Low SI signal", sub: true },
-              { text: "Steam Line Pressure \u2014 Low main steam isolation signal", sub: true },
-              { text: "Automatically enables Steam Line Pressure \u2014 Negative Rate \u2014 High (replacement signal)", sub: false },
+              { text: "Low PZR press SI, \u22641830#", sub: true },
+              { text: "Low Stm Line SI \u2264 615#", sub: true },
+              { text: "Low Stm Line MSLIS \u2264 615#", sub: true },
+              { text: "Automatically enables Steam Line Pressure \u2014 Negative Rate \u2014 Inserts -100#/50 sec. MSLIS", sub: false },
               { text: "When > 1970 psig, signals automatically reinstate", sub: false }
             ]
           },
@@ -359,7 +359,8 @@ const DECKS = [
             label: "Coincidence",
             color: "red",
             items: [
-              { text: "2/4 RCS loops", sub: false }
+              { text: "2/4 RCS loops <550\u00b0F Isolates Steam Dumps", sub: false },
+              { text: "3/4 channels > 550\u00b0F Auto Reenables Dumps", sub: false }
             ]
           },
           {
@@ -405,7 +406,9 @@ const DECKS = [
             label: "Coincidence",
             color: "red",
             items: [
-              { text: "1/2 Turbine Impulse Pressure channels", sub: false }
+              { text: "1/2 Turbine Impulse Pressure channels", sub: false },
+              { text: "AC PT-505,506", sub: false },
+              { text: "10% PR = 72# impulse pressure", sub: false }
             ]
           },
           {
@@ -1111,49 +1114,6 @@ const DECKS = [
               { text: "Primarily mitigates Rod Ejection Accident (REA)", sub: false },
               { text: "Rate trip acts faster than absolute level High Flux trip during rapid transients", sub: true },
               { text: "Limits peak power and prevents fuel damage", sub: true }
-            ]
-          }
-        ]
-      },
-      {
-        id: "5",
-        title: "Power Range \u2014 High Negative Rate Flux",
-        sections: [
-          {
-            label: "Setpoint",
-            color: "amber",
-            items: [
-              { text: "\u2265 \u22124% of RTP in 2 seconds", sub: false }
-            ]
-          },
-          {
-            label: "Coincidence",
-            color: "red",
-            items: [
-              { text: "2/4 Power Range channels; 1/4 provides alarm", sub: false }
-            ]
-          },
-          {
-            label: "Interlocks",
-            color: "green",
-            items: [
-              { text: "Manually reset on NI cabinet", sub: false }
-            ]
-          },
-          {
-            label: "Purpose",
-            color: "blue",
-            items: [
-              { text: "Trips reactor following a rapid relative decrease in neutron flux", sub: false }
-            ]
-          },
-          {
-            label: "Design Basis",
-            color: "purple",
-            items: [
-              { text: "Primarily mitigates multiple rod drop accident", sub: false },
-              { text: "Dropped rods depress local power; auto rod control would unsafely withdraw other banks", sub: true },
-              { text: "Prevents asymmetric flux distribution and unconservative local DNBR", sub: true }
             ]
           }
         ]
