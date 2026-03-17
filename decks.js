@@ -12,7 +12,7 @@ const DECKS = [
             label: "Setpoint",
             color: "amber",
             items: [
-              { text: "Reactor Trip Breakers (RTBs) open", sub: false }
+              { text: "Reactor Trip & Bypass Breakers - OPEN Train Specific", sub: false }
             ]
           },
           {
