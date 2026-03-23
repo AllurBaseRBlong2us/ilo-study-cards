@@ -716,7 +716,16 @@
     activeCards: [],
     currentIndex: 0,
     isFlipped: false,
-    isShuffled: false
+    isShuffled: false,
+    isStudyMode: false,
+    sessionCards: [],
+    sessionIndex: 0,
+    sessionStats: {
+      reviewed: 0,
+      movedUp: 0,
+      droppedToBox1: 0,
+      startTime: null
+    }
   };
 
   function getDeckForCard(card) {
@@ -915,6 +924,127 @@
     document.getElementById('masteryOverlay').classList.remove('visible');
   }
 
+  // === Study Mode ===
+  function buildStudySession(excludeCards, maxCards) {
+    var cap = maxCards || 30;
+    var excluded = excludeCards || [];
+    var excludedKeys = new Set(excluded.map(function(c) { return getCardKey(c); }));
+
+    // Collect cards from selected decks, grouped per deck
+    var deckQueues = [];
+    DECKS.forEach(function(deck) {
+      if (!state.selectedDecks.has(deck.id)) return;
+      var cards = deck.cards.filter(function(c) { return !excludedKeys.has(getCardKey(c)); });
+      // Sort by box ascending (weakest first), shuffle within same box
+      cards.sort(function(a, b) { return getCardBox(a) - getCardBox(b); });
+      var shuffled = [];
+      var currentBox = -1;
+      var group = [];
+      cards.forEach(function(c) {
+        var box = getCardBox(c);
+        if (box !== currentBox) {
+          if (group.length > 0) shuffled = shuffled.concat(shuffleArray(group.slice()));
+          group = [c];
+          currentBox = box;
+        } else {
+          group.push(c);
+        }
+      });
+      if (group.length > 0) shuffled = shuffled.concat(shuffleArray(group.slice()));
+      if (shuffled.length > 0) deckQueues.push(shuffled);
+    });
+
+    // Round-robin interleave across decks
+    var result = [];
+    var maxLen = deckQueues.length > 0 ? Math.max.apply(null, deckQueues.map(function(q) { return q.length; })) : 0;
+    for (var i = 0; i < maxLen; i++) {
+      for (var d = 0; d < deckQueues.length; d++) {
+        if (i < deckQueues[d].length) {
+          result.push(deckQueues[d][i]);
+        }
+      }
+    }
+
+    return result.slice(0, cap);
+  }
+
+  function startStudyMode() {
+    var sessionCards = buildStudySession();
+    if (sessionCards.length === 0) return;
+
+    state.isStudyMode = true;
+    state.sessionCards = sessionCards;
+    state.sessionIndex = 0;
+    state.sessionStats = { reviewed: 0, movedUp: 0, droppedToBox1: 0, startTime: Date.now() };
+
+    state.activeCards = sessionCards;
+    state.currentIndex = 0;
+    state.isFlipped = false;
+    document.getElementById('card').classList.remove('flipped');
+
+    renderCard(sessionCards[0]);
+    updateStudyModeUI(true);
+    updateProgress();
+  }
+
+  function endStudyMode() {
+    closeMasteryDashboard();
+    state.isStudyMode = false;
+    state.sessionCards = [];
+    state.sessionIndex = 0;
+    updateStudyModeUI(false);
+    rebuildActiveCards();
+  }
+
+  function keepGoing() {
+    closeMasteryDashboard();
+    var moreCards = buildStudySession(state.sessionCards);
+    if (moreCards.length === 0) {
+      showMasteryDashboard(true);
+      return;
+    }
+    state.sessionCards = state.sessionCards.concat(moreCards);
+    state.activeCards = state.sessionCards;
+    state.sessionIndex++;
+    if (state.sessionIndex >= state.sessionCards.length) {
+      state.sessionIndex = state.sessionCards.length - 1;
+    }
+    state.currentIndex = state.sessionIndex;
+    state.isFlipped = false;
+    document.getElementById('card').classList.remove('flipped');
+    renderCard(state.sessionCards[state.sessionIndex]);
+    updateProgress();
+  }
+
+  function updateStudyModeUI(entering) {
+    var subtitle = document.querySelector('.header .subtitle');
+    var studyBtn = document.getElementById('studyBtn');
+    var prevBtn = document.getElementById('prevBtn');
+    var cardArea = document.querySelector('.card-area');
+    var deckSelector = document.getElementById('deckSelector');
+
+    if (entering) {
+      if (studyBtn) { studyBtn.textContent = 'END'; studyBtn.classList.add('active'); }
+      if (prevBtn) prevBtn.style.display = 'none';
+      if (cardArea) cardArea.classList.add('study-mode');
+      if (deckSelector) deckSelector.classList.add('disabled');
+    } else {
+      if (subtitle) subtitle.innerHTML = 'SNUPPS PWR &middot; ILO Study Material';
+      if (studyBtn) { studyBtn.textContent = '\u{1F4D6}'; studyBtn.classList.remove('active'); }
+      if (prevBtn) prevBtn.style.display = '';
+      if (cardArea) cardArea.classList.remove('study-mode');
+      if (deckSelector) deckSelector.classList.remove('disabled');
+    }
+  }
+
+  function toggleStudyMode() {
+    if (state.isStudyMode) {
+      endStudyMode();
+    } else {
+      startStudyMode();
+    }
+  }
+
   function renderRatingButtons(card) {
     var box = getCardBox(card);
     var goodLabel = box >= 5 ? 'Stay' : 'Box ' + Math.min(box + 1, 5);
@@ -1041,9 +1171,14 @@
 
   function goToCard(index) {
     if (state.activeCards.length === 0) return;
-    // Wrap around
-    if (index < 0) index = state.activeCards.length - 1;
-    if (index >= state.activeCards.length) index = 0;
+    if (state.isStudyMode) {
+      // No wrap-around in study mode
+      if (index < 0) index = 0;
+      if (index >= state.activeCards.length) return;
+    } else {
+      if (index < 0) index = state.activeCards.length - 1;
+      if (index >= state.activeCards.length) index = 0;
+    }
 
     state.currentIndex = index;
     state.isFlipped = false;
@@ -1053,7 +1188,13 @@
     updateProgress();
   }
 
-  function goToNext() { goToCard(state.currentIndex + 1); }
+  function goToNext() {
+    if (state.isStudyMode) {
+      advanceStudySession();
+    } else {
+      goToCard(state.currentIndex + 1);
+    }
+  }
   function goToPrev() { goToCard(state.currentIndex - 1); }
 
   function updateProgress() {
@@ -1206,7 +1347,7 @@
     switch (e.key) {
       case 'ArrowLeft':
         e.preventDefault();
-        goToPrev();
+        if (!state.isStudyMode) goToPrev();
         break;
       case 'ArrowRight':
         e.preventDefault();
@@ -1253,7 +1394,7 @@
     // Must be primarily horizontal and exceed 50px threshold
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
       if (dx > 0) {
-        goToPrev(); // swipe right = previous
+        if (!state.isStudyMode) goToPrev(); // swipe right = previous (disabled in study mode)
       } else {
         goToNext(); // swipe left = next
       }
