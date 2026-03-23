@@ -1004,7 +1004,9 @@
     if (existingFrontFlag) existingFrontFlag.remove();
     cardFront.insertAdjacentHTML('beforeend', flagBtnHtml);
 
-    document.getElementById('backHeader').innerHTML = card.id + ' \u2014 ' + card.title;
+    var box = getCardBox(card);
+    document.getElementById('backHeader').innerHTML = card.id + ' \u2014 ' + card.title +
+      '<span class="box-pill box-' + box + '">BOX ' + box + '</span>';
 
     var sectionsEl = document.getElementById('backSections');
     sectionsEl.innerHTML = card.sections.map(function(section) {
@@ -1021,6 +1023,10 @@
     // Add note textarea after sections
     var noteKey = getCardKey(card);
     var noteText = getCardNote(card);
+    // Rating buttons before note
+    sectionsEl.innerHTML += renderRatingButtons(card);
+
+    // Note textarea
     sectionsEl.innerHTML += '<div class="note-section"><textarea class="note-input" placeholder="Add study notes..." onblur="saveNote(this)" onclick="event.stopPropagation()" data-key="' + noteKey + '">' + escapeHtml(noteText) + '</textarea></div>';
 
     // Add flag button to card back
