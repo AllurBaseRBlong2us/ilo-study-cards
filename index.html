@@ -394,6 +394,222 @@
     border-color: var(--amber);
   }
 
+  /* === Rating Buttons === */
+  .rating-bar {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin: 12px 0 4px;
+  }
+  .rate-btn {
+    flex: 1;
+    padding: 8px 4px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    line-height: 1.3;
+    border: 1px solid;
+  }
+  .rate-btn:active { transform: scale(0.95); }
+  .rate-btn.rate-again  { background: var(--red-dim);    border-color: var(--red);    color: var(--red); }
+  .rate-btn.rate-hard   { background: var(--amber-dim);  border-color: var(--amber);  color: var(--amber); }
+  .rate-btn.rate-good   { background: var(--green-dim);  border-color: var(--green);  color: var(--green); }
+  .rate-btn.rate-easy   { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+  .rate-sub {
+    font-size: 8px;
+    opacity: 0.7;
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* === Box Indicator Pill === */
+  .box-pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .box-pill.box-1 { background: var(--red-dim);    color: var(--red); }
+  .box-pill.box-2 { background: var(--amber-dim);  color: var(--amber); }
+  .box-pill.box-3 { background: var(--blue-dim);   color: var(--blue); }
+  .box-pill.box-4 { background: var(--green-dim);  color: var(--green); }
+  .box-pill.box-5 { background: var(--purple-dim); color: var(--purple); }
+
+  /* === Study Mode Card Indicator === */
+  .card-area.study-mode .card-front,
+  .card-area.study-mode .card-back {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.15);
+  }
+
+  /* === Study Button Active State === */
+  .study-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* === Mastery Dashboard Overlay === */
+  .mastery-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 23, 0.92);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .mastery-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .mastery-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 460px;
+    width: calc(100% - 40px);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .mastery-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .mastery-overall {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mastery-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .mastery-pct-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+  .mastery-deck {
+    margin-bottom: 14px;
+  }
+  .mastery-deck-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mastery-bar {
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    background: var(--bg);
+  }
+  .mastery-seg {
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .mastery-seg.seg-1 { background: var(--red); }
+  .mastery-seg.seg-2 { background: var(--amber); }
+  .mastery-seg.seg-3 { background: var(--blue); }
+  .mastery-seg.seg-4 { background: var(--green); }
+  .mastery-seg.seg-5 { background: var(--purple); }
+  .mastery-session {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mastery-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .mastery-stat-val { font-weight: 600; }
+  .mastery-stat-val.up { color: var(--green); }
+  .mastery-stat-val.down { color: var(--red); }
+  .mastery-close-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+  .mastery-close-btn:active { background: var(--accent); color: var(--bg); }
+  .mastery-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .mastery-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .mastery-actions button:active { transform: scale(0.95); }
+  .mastery-keep-btn {
+    border: 1px solid var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+  .mastery-done-btn {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+  }
+
+  /* === Deck selector disabled in study mode === */
+  .deck-selector.disabled .deck-btn {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
   /* === Tools Bar === */
   .tools-bar {
     display: flex;
