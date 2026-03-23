@@ -2441,5 +2441,427 @@ const DECKS = [
         ]
       }
     ]
-  }
-];
+  },
+  {
+    "id": "rcp-setpoints",
+    "name": "Rcp Setpoints",
+    "shortName": "RCP",
+    "cards": [
+        {
+            "id": "RCP-1",
+            "title": "No. 1 Seal and Bearing Water Temperature",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "> 230°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Protects No. 1 seal and bearing from thermal damage due to high water temperature",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-2",
+            "title": "RCP Motor Bearing Temperature",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "> 195°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Protects RCP motor bearings from overheating and potential failure",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-3",
+            "title": "RCP Motor Stator Winding Temperature",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "> 299°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Protects motor stator windings from thermal degradation of insulation",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-4",
+            "title": "Frame Vibration",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "> 5 mils",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Detects abnormal pump frame vibration indicating mechanical degradation",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-5",
+            "title": "Shaft Vibration",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "> 20 mils",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Detects abnormal shaft vibration indicating potential seal or bearing damage",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-6",
+            "title": "No. 1 Seal Leakoff",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "< 0.8 gpm",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Indicates No. 1 seal degradation when leakoff flow drops below normal range",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "RCP-7",
+            "title": "No. 1 Seal dP",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "< 200 psid",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Indicates loss of differential pressure across No. 1 seal suggesting seal failure",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+},
+  {
+    "id": "tech-spec-modes",
+    "name": "Tech Spec Modes",
+    "shortName": "Modes",
+    "cards": [
+        {
+            "id": "MODE-1",
+            "title": "Power Operation",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "Keff ≥ 0.99",
+                            "sub": false
+                        },
+                        {
+                            "text": "% RTP > 5% (excluding decay heat)",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Normal at-power operations above 5% reactor thermal power",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-2",
+            "title": "Startup",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "Keff ≥ 0.99",
+                            "sub": false
+                        },
+                        {
+                            "text": "% RTP ≤ 5% (excluding decay heat)",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Reactor is critical or approaching criticality but below 5% power",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-3",
+            "title": "Hot Standby",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "Keff < 0.99",
+                            "sub": false
+                        },
+                        {
+                            "text": "Tave ≥ 350°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Reactor subcritical with RCS at or above normal operating temperature",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        {
+                            "text": "All vessel head closure bolts fully tensioned",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-4",
+            "title": "Hot Shutdown",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "Keff < 0.99",
+                            "sub": false
+                        },
+                        {
+                            "text": "200°F < Tave < 350°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Reactor subcritical with RCS temperature between 200°F and 350°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        {
+                            "text": "All vessel head closure bolts fully tensioned",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-5",
+            "title": "Cold Shutdown",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        {
+                            "text": "Keff < 0.99",
+                            "sub": false
+                        },
+                        {
+                            "text": "Tave ≤ 200°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "Reactor subcritical with RCS temperature at or below 200°F",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        {
+                            "text": "All vessel head closure bolts fully tensioned",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-6",
+            "title": "Refueling",
+            "sections": [
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "One or more vessel head closure bolts not fully tensioned",
+                            "sub": false
+                        }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        {
+                            "text": "One or more vessel head closure bolts not fully tensioned",
+                            "sub": false
+                        },
+                        {
+                            "text": "Distinguished from Cold Shutdown by bolt tension status",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "MODE-D",
+            "title": "Defueled",
+            "sections": [
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        {
+                            "text": "All fuel assemblies removed from the reactor vessel",
+                            "sub": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+]
