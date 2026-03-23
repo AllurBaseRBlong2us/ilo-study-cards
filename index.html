@@ -798,6 +798,185 @@
     localStorage.setItem('ilo-notes', JSON.stringify(notes));
   }
 
+  // === Leitner Box System ===
+  function getCardBox(card) {
+    var boxes = JSON.parse(localStorage.getItem('ilo-boxes') || '{}');
+    var entry = boxes[getCardKey(card)];
+    return entry ? entry.box : 1;
+  }
+
+  function setCardBox(card, box) {
+    var boxes = JSON.parse(localStorage.getItem('ilo-boxes') || '{}');
+    var key = getCardKey(card);
+    boxes[key] = { box: box, lastRated: new Date().toISOString() };
+    localStorage.setItem('ilo-boxes', JSON.stringify(boxes));
+  }
+
+  function rateCard(card, rating) {
+    var currentBox = getCardBox(card);
+    var newBox;
+    switch (rating) {
+      case 'again': newBox = 1; break;
+      case 'hard':  newBox = currentBox; break;
+      case 'good':  newBox = Math.min(currentBox + 1, 5); break;
+      case 'easy':  newBox = Math.min(currentBox + 2, 5); break;
+      default: return { moved: 0, newBox: currentBox };
+    }
+    var moved = newBox - currentBox;
+    setCardBox(card, newBox);
+    return { moved: moved, newBox: newBox };
+  }
+
+  function getMasteryStats(deckId) {
+    var boxes = JSON.parse(localStorage.getItem('ilo-boxes') || '{}');
+    var cards;
+    if (deckId) {
+      var deck = DECKS.find(function(d) { return d.id === deckId; });
+      cards = deck ? deck.cards : [];
+    } else {
+      cards = DECKS.flatMap(function(d) { return d.cards; });
+    }
+    var total = cards.length;
+    var distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    cards.forEach(function(card) {
+      var b = 1;
+      var entry = boxes[getCardKey(card)];
+      if (entry) b = entry.box;
+      distribution[b]++;
+    });
+    var mastered = distribution[4] + distribution[5];
+    var pct = total > 0 ? Math.round(mastered / total * 100) : 0;
+    return { total: total, distribution: distribution, mastered: mastered, pct: pct };
+  }
+
+  function updateMasteryIndicator() {
+    var stats = getMasteryStats();
+    var el = document.getElementById('masteryIndicator');
+    if (el) {
+      el.textContent = stats.pct + '% mastered';
+    }
+  }
+
+  function showMasteryDashboard(showSessionStats) {
+    var panel = document.getElementById('masteryPanel');
+    var html = '<div class="mastery-title">Mastery Dashboard</div>';
+
+    // Session stats (only after Study Mode session)
+    if (showSessionStats && state.isStudyMode && state.sessionStats) {
+      var elapsedMs = state.sessionStats.startTime ? Date.now() - state.sessionStats.startTime : 0;
+      var elapsedMin = Math.floor(elapsedMs / 60000);
+      var elapsedSec = Math.floor((elapsedMs % 60000) / 1000);
+      var durationStr = elapsedMin > 0 ? elapsedMin + ' min' : elapsedSec + ' sec';
+      html += '<div class="mastery-session">';
+      html += '<div class="mastery-stat"><span>Cards reviewed</span><span class="mastery-stat-val">' + state.sessionStats.reviewed + '</span></div>';
+      html += '<div class="mastery-stat"><span>Moved up</span><span class="mastery-stat-val up">' + state.sessionStats.movedUp + '</span></div>';
+      html += '<div class="mastery-stat"><span>Dropped to Box 1</span><span class="mastery-stat-val down">' + state.sessionStats.droppedToBox1 + '</span></div>';
+      html += '<div class="mastery-stat"><span>Duration</span><span class="mastery-stat-val">' + durationStr + '</span></div>';
+      html += '</div>';
+    }
+
+    // Overall mastery
+    var overall = getMasteryStats();
+    html += '<div class="mastery-overall">';
+    html += '<div class="mastery-pct">' + overall.pct + '%</div>';
+    html += '<div class="mastery-pct-label">OVERALL MASTERY (' + overall.mastered + ' / ' + overall.total + ' cards in Box 4\u20115)</div>';
+    html += '</div>';
+
+    // Per-deck breakdown
+    DECKS.forEach(function(deck) {
+      var stats = getMasteryStats(deck.id);
+      html += '<div class="mastery-deck">';
+      html += '<div class="mastery-deck-name"><span>' + deck.name + '</span><span>' + stats.pct + '%</span></div>';
+      html += '<div class="mastery-bar">';
+      for (var b = 1; b <= 5; b++) {
+        var w = stats.total > 0 ? (stats.distribution[b] / stats.total * 100) : 0;
+        if (w > 0) {
+          html += '<div class="mastery-seg seg-' + b + '" style="width:' + w + '%" title="Box ' + b + ': ' + stats.distribution[b] + '"></div>';
+        }
+      }
+      html += '</div></div>';
+    });
+
+    // Action buttons
+    if (showSessionStats && state.isStudyMode) {
+      html += '<div class="mastery-actions">';
+      html += '<button class="mastery-keep-btn" onclick="keepGoing()">Keep Going</button>';
+      html += '<button class="mastery-done-btn" onclick="endStudyMode()">Done</button>';
+      html += '</div>';
+    } else {
+      html += '<button class="mastery-close-btn" onclick="closeMasteryDashboard()">Close</button>';
+    }
+
+    panel.innerHTML = html;
+    document.getElementById('masteryOverlay').classList.add('visible');
+  }
+
+  function closeMasteryDashboard() {
+    document.getElementById('masteryOverlay').classList.remove('visible');
+  }
+
+  function renderRatingButtons(card) {
+    var box = getCardBox(card);
+    var goodLabel = box >= 5 ? 'Stay' : 'Box ' + Math.min(box + 1, 5);
+    var easyLabel = box >= 4 ? 'Box 5' : 'Box ' + Math.min(box + 2, 5);
+
+    return '<div class="rating-bar">' +
+      '<button class="rate-btn rate-again" onclick="event.stopPropagation(); handleRate(\'again\')" aria-label="Again - back to box 1">' +
+        'Again<span class="rate-sub">\u2192 Box 1</span></button>' +
+      '<button class="rate-btn rate-hard" onclick="event.stopPropagation(); handleRate(\'hard\')" aria-label="Hard - stay in current box">' +
+        'Hard<span class="rate-sub">\u2192 Stay</span></button>' +
+      '<button class="rate-btn rate-good" onclick="event.stopPropagation(); handleRate(\'good\')" aria-label="Good - move up one box">' +
+        'Good<span class="rate-sub">\u2192 ' + goodLabel + '</span></button>' +
+      '<button class="rate-btn rate-easy" onclick="event.stopPropagation(); handleRate(\'easy\')" aria-label="Easy - move up two boxes">' +
+        'Easy<span class="rate-sub">\u2192 ' + easyLabel + '</span></button>' +
+    '</div>';
+  }
+
+  function updateBoxPillOnly(card) {
+    var box = getCardBox(card);
+    var pill = document.querySelector('.box-pill');
+    if (pill) {
+      pill.className = 'box-pill box-' + box;
+      pill.textContent = 'BOX ' + box;
+    }
+    // Update rating button sub-labels without full re-render
+    var goodLabel = box >= 5 ? 'Stay' : 'Box ' + Math.min(box + 1, 5);
+    var easyLabel = box >= 4 ? 'Box 5' : 'Box ' + Math.min(box + 2, 5);
+    var subs = document.querySelectorAll('.rate-sub');
+    if (subs.length === 4) {
+      subs[0].textContent = '\u2192 Box 1';
+      subs[1].textContent = '\u2192 Stay';
+      subs[2].textContent = '\u2192 ' + goodLabel;
+      subs[3].textContent = '\u2192 ' + easyLabel;
+    }
+  }
+
+  function advanceStudySession() {
+    if (state.sessionIndex < state.sessionCards.length - 1) {
+      state.sessionIndex++;
+      goToCard(state.sessionIndex);
+    } else {
+      showMasteryDashboard(true);
+    }
+  }
+
+  function handleRate(rating) {
+    var card = state.activeCards[state.currentIndex];
+    if (!card) return;
+    var result = rateCard(card, rating);
+
+    if (state.isStudyMode) {
+      state.sessionStats.reviewed++;
+      if (result.moved > 0) state.sessionStats.movedUp++;
+      if (result.newBox === 1 && result.moved < 0) state.sessionStats.droppedToBox1++;
+      advanceStudySession();
+    } else {
+      // In browse mode, update pill and labels without full re-render (preserves unsaved notes)
+      updateBoxPillOnly(card);
+    }
+    updateMasteryIndicator();
+  }
+
   function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   }
