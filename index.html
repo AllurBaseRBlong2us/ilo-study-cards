@@ -1057,12 +1057,28 @@
   function goToPrev() { goToCard(state.currentIndex - 1); }
 
   function updateProgress() {
-    var total = state.activeCards.length;
-    var current = total > 0 ? state.currentIndex + 1 : 0;
-    var pct = total > 0 ? Math.round(current / total * 100) : 0;
+    var total, current, pct;
+
+    if (state.isStudyMode) {
+      total = state.sessionCards.length;
+      current = state.sessionIndex + 1;
+      pct = total > 0 ? Math.round(current / total * 100) : 0;
+      // Update subtitle with session progress
+      var subtitle = document.querySelector('.header .subtitle');
+      if (subtitle) subtitle.textContent = 'Study Mode \u2014 ' + current + '/' + total;
+    } else {
+      total = state.activeCards.length;
+      current = total > 0 ? state.currentIndex + 1 : 0;
+      pct = total > 0 ? Math.round(current / total * 100) : 0;
+    }
 
     document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressText').textContent = current + ' / ' + total + ' (' + pct + '%)';
+
+    var stats = getMasteryStats();
+    document.getElementById('progressText').innerHTML =
+      current + ' / ' + total + ' (' + pct + '%) \u00b7 ' +
+      '<span id="masteryIndicator" style="cursor:pointer;color:var(--accent)" onclick="showMasteryDashboard(false)">' +
+      stats.pct + '% mastered</span>';
   }
 
   function rebuildActiveCards() {
@@ -1205,6 +1221,18 @@
       case 'S':
         e.preventDefault();
         toggleShuffle();
+        break;
+      case '1':
+        if (state.isFlipped) { e.preventDefault(); handleRate('again'); }
+        break;
+      case '2':
+        if (state.isFlipped) { e.preventDefault(); handleRate('hard'); }
+        break;
+      case '3':
+        if (state.isFlipped) { e.preventDefault(); handleRate('good'); }
+        break;
+      case '4':
+        if (state.isFlipped) { e.preventDefault(); handleRate('easy'); }
         break;
     }
   });
