@@ -1415,10 +1415,11 @@
 
   function exportData() {
     var data = {
-      version: 1,
+      version: 2,
       exported: new Date().toISOString(),
       flags: JSON.parse(localStorage.getItem('ilo-flags') || '{}'),
-      notes: JSON.parse(localStorage.getItem('ilo-notes') || '{}')
+      notes: JSON.parse(localStorage.getItem('ilo-notes') || '{}'),
+      boxes: JSON.parse(localStorage.getItem('ilo-boxes') || '{}')
     };
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
@@ -1436,12 +1437,13 @@
     reader.onload = function(e) {
       try {
         var data = JSON.parse(e.target.result);
-        if (!data.flags && !data.notes) {
+        if (!data.flags && !data.notes && !data.boxes) {
           showFeedback('importFeedback', 'Invalid backup file', true, 3000);
           return;
         }
         var existingFlags = JSON.parse(localStorage.getItem('ilo-flags') || '{}');
         var existingNotes = JSON.parse(localStorage.getItem('ilo-notes') || '{}');
+        var existingBoxes = JSON.parse(localStorage.getItem('ilo-boxes') || '{}');
         if (data.flags) {
           Object.assign(existingFlags, data.flags);
           localStorage.setItem('ilo-flags', JSON.stringify(existingFlags));
@@ -1450,11 +1452,16 @@
           Object.assign(existingNotes, data.notes);
           localStorage.setItem('ilo-notes', JSON.stringify(existingNotes));
         }
+        if (data.boxes) {
+          Object.assign(existingBoxes, data.boxes);
+          localStorage.setItem('ilo-boxes', JSON.stringify(existingBoxes));
+        }
         renderDeckSelector();
         rebuildActiveCards();
         if (state.activeCards[state.currentIndex]) {
           renderCard(state.activeCards[state.currentIndex]);
         }
+        updateMasteryIndicator();
         showFeedback('importFeedback', 'Backup imported', false, 2000);
       } catch (err) {
         showFeedback('importFeedback', 'Invalid backup file', true, 3000);
