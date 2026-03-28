@@ -2877,7 +2877,7 @@ const DECKS = [
                     "label": "Setpoint",
                     "color": "amber",
                     "items": [
-                        { "text": "OTdTSP \u2264 \u0394T\u2080 [ K1 \u2212 K2(T \u2212 T\u2032) + K3(P \u2212 P\u2032) \u2212 f\u2081(\u0394I) ]", "sub": false }
+                        { "text": "+/\u2212 110%", "sub": false }
                     ]
                 },
                 {
@@ -2925,7 +2925,7 @@ const DECKS = [
                     "label": "Setpoint",
                     "color": "amber",
                     "items": [
-                        { "text": "OPdTSP \u2264 \u0394T\u2080 [ K4 \u2212 K5(dT/dt) \u2212 K6(T \u2212 T\u2033) \u2212 f\u2082(\u0394I) ]", "sub": false }
+                        { "text": "\u2212 110%", "sub": false }
                     ]
                 },
                 {
