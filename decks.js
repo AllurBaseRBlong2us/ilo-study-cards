@@ -2863,5 +2863,108 @@ const DECKS = [
             ]
         }
     ]
+},
+{
+    "id": "otdt-vs-opdt",
+    "name": "OTdT vs OPdT",
+    "shortName": "OTdT/OPdT",
+    "cards": [
+        {
+            "id": "OTOP-1",
+            "title": "Overtemperature \u0394T (OT\u0394T)",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        { "text": "OTdTSP \u2264 \u0394T\u2080 [ K1 \u2212 K2(T \u2212 T\u2032) + K3(P \u2212 P\u2032) \u2212 f\u2081(\u0394I) ]", "sub": false }
+                    ]
+                },
+                {
+                    "label": "Coincidence",
+                    "color": "red",
+                    "items": [
+                        { "text": "2/4 loops \u2014 trip if actual \u0394T \u2265 OTdTSP", "sub": false },
+                        { "text": "Rod stop & turbine runback at OTdTSP \u2212 3%", "sub": true }
+                    ]
+                },
+                {
+                    "label": "Interlocks",
+                    "color": "green",
+                    "items": [
+                        { "text": "Applicable in Modes 1 and 2", "sub": false }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        { "text": "Protects DNBR limit \u2014 prevents departure from nucleate boiling during slow transients (Function 6)", "sub": false },
+                        { "text": "Inputs: Loop \u0394T, Tavg (lead/lag compensated via \u03c4\u2081\u2013\u03c4\u2086), pressurizer pressure K3(P\u2212P\u2032), axial flux penalty f\u2081(\u0394I)", "sub": true },
+                        { "text": "KEY: OT\u0394T is the ONLY function that uses pressurizer pressure (DNBR is pressure-dependent)", "sub": true },
+                        { "text": "Lead/lag on Tavg compensates for piping transport delay from core to RTDs", "sub": true }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        { "text": "Thot: 3 RTDs/loop averaged (530\u2013650\u00b0F), Tcold: 1 RTD/loop (510\u2013630\u00b0F)", "sub": false },
+                        { "text": "Pressurizer: BB PT-455/456/457/458 (1700\u20132500 psig)", "sub": false },
+                        { "text": "NIS: N-41 thru N-44 (top + bottom detectors, 0\u2013120% RTP)", "sub": false },
+                        { "text": "MCB three-pen recorder shows OTdTSP, OPdTSP, and actual \u0394T", "sub": false }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "OTOP-2",
+            "title": "Overpower \u0394T (OP\u0394T)",
+            "sections": [
+                {
+                    "label": "Setpoint",
+                    "color": "amber",
+                    "items": [
+                        { "text": "OPdTSP \u2264 \u0394T\u2080 [ K4 \u2212 K5(dT/dt) \u2212 K6(T \u2212 T\u2033) \u2212 f\u2082(\u0394I) ]", "sub": false }
+                    ]
+                },
+                {
+                    "label": "Coincidence",
+                    "color": "red",
+                    "items": [
+                        { "text": "2/4 loops \u2014 trip if actual \u0394T \u2265 OPdTSP", "sub": false },
+                        { "text": "Rod stop & turbine runback at OPdTSP \u2212 3%", "sub": true }
+                    ]
+                },
+                {
+                    "label": "Interlocks",
+                    "color": "green",
+                    "items": [
+                        { "text": "Applicable in Modes 1 and 2", "sub": false }
+                    ]
+                },
+                {
+                    "label": "Purpose",
+                    "color": "blue",
+                    "items": [
+                        { "text": "Protects fuel integrity \u2014 prevents pellet melting and <1% cladding strain (kW/ft limit, Function 7)", "sub": false },
+                        { "text": "Inputs: Loop \u0394T, explicit rate term K5(dT/dt), K6(T\u2212T\u2033), axial flux penalty f\u2082(\u0394I)", "sub": true },
+                        { "text": "KEY: OP\u0394T does NOT use pressurizer pressure (fuel overpower limits are not pressure-dependent)", "sub": true },
+                        { "text": "K5 has two values (increasing vs decreasing Tavg); K6 has two values (T>T\u2033 vs T\u2264T\u2033)", "sub": true },
+                        { "text": "Uses explicit dT/dt instead of lead/lag compensation", "sub": true }
+                    ]
+                },
+                {
+                    "label": "Design Basis",
+                    "color": "purple",
+                    "items": [
+                        { "text": "Same RTD inputs as OT\u0394T \u2014 NO pressurizer pressure input", "sub": false },
+                        { "text": "NIS N-41 thru N-44 for f\u2082(\u0394I) with separate COLR values from f\u2081", "sub": false },
+                        { "text": "Ovation: Tavg uses 2nd lowest of 4 ch; \u0394T uses 2nd highest of 4 ch", "sub": false }
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ]
