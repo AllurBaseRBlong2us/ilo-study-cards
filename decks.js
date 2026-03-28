@@ -2870,8 +2870,8 @@ const DECKS = [
     "shortName": "OTdT/OPdT",
     "cards": [
         {
-            "id": "OTOP-1",
-            "title": "Overtemperature \u0394T (OT\u0394T)",
+            "id": "Overtemperature \u0394T (OT\u0394T)",
+            "title": "",
             "sections": [
                 {
                     "label": "Setpoint",
@@ -2918,8 +2918,8 @@ const DECKS = [
             ]
         },
         {
-            "id": "OTOP-2",
-            "title": "Overpower \u0394T (OP\u0394T)",
+            "id": "Overpower \u0394T (OP\u0394T)",
+            "title": "",
             "sections": [
                 {
                     "label": "Setpoint",
